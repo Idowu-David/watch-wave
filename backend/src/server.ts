@@ -9,6 +9,10 @@ import sequelize from "./config/db";
 import "./models/user";
 import "./models/watchlist";
 
+// importing of routes
+import watchlistRoutes from "./routes/watchlist";
+import userRoutes from "./routes/user";
+
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,6 +31,9 @@ async function startServer() {
 
     await sequelize.sync({ alter: true });
     console.log("✅ Models synced:", Object.keys(sequelize.models));
+
+    app.use("/watchlist", watchlistRoutes);
+    app.use("/user", userRoutes);
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
