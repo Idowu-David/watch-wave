@@ -22,13 +22,13 @@ export default function LandingPage() {
           {/* Main CTAs */}
           <div className="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link 
-              href="../components/auth/sign-up" 
+              href="../auth/sign-up" 
               className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-red-600 hover:bg-red-700 transition transform hover:scale-[1.02]"
             >
               Start Tracking Now
             </Link>
             <Link 
-              href="../components/discover" 
+              href="../discover" 
               className="inline-flex items-center justify-center px-8 py-3 border border-neutral-700 text-base font-medium rounded-full text-neutral-300 hover:bg-neutral-800 hover:text-white transition"
             >
               Browse Movies

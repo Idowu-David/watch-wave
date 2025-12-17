@@ -8,13 +8,13 @@ const Header = () => {
       </Link>
       <nav className="space-x-4">
         <Link 
-          href="../components/auth/login" 
+          href="../auth/login" 
           className="px-4 py-2 text-sm font-medium rounded-full text-neutral-300 hover:text-white transition"
         >
           Log In
         </Link>
         <Link 
-          href="../components/auth/sign-up" 
+          href="../auth/sign-up" 
           className="px-4 py-2 text-sm font-medium rounded-full bg-red-600 text-white hover:bg-red-700 transition"
         >
           Sign Up
