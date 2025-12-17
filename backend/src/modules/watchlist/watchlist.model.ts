@@ -34,11 +34,12 @@ class Watchlist
 Watchlist.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
-    userId: { type: DataTypes.UUID, allowNull: false },
+					type: DataTypes.INTEGER,
+					primaryKey: true,
+					autoIncrement: true,
+					allowNull: false,
+				},
+    userId: { type: DataTypes.INTEGER, allowNull: false },
     tmdbId: { type: DataTypes.INTEGER, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
     posterUrl: { type: DataTypes.STRING, allowNull: true },
@@ -60,7 +61,6 @@ Watchlist.init(
   }
 );
 
-// Define the Association
 User.hasMany(Watchlist, {
   foreignKey: "userId",
   as: "watchlistItems",
