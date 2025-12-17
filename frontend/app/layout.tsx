@@ -1,13 +1,25 @@
-import Sidebar from "./common/sidebar";
+import './global.css'; // Import the Tailwind base styles
+import type { Metadata } from 'next';
 
-export default function DiscoverPage() {
+// 1. Define Metadata for SEO
+export const metadata: Metadata = {
+  title: 'Watchlist Pro',
+  description: 'Your personal movie and TV show tracker.',
+};
+
+// 2. Define the Root Layout Component
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <div className="flex">
-      <Sidebar />
-      <main className="ml-64 p-6 w-full">
-        <h1 className="text-2xl font-bold mb-6">Discover</h1>
-        {/* movie rows go here */}
-      </main>
-    </div>
+    <html lang="en">
+      <body className="min-h-screen">
+        <header>{/* Leader: Place the <NavBar /> component here later */}</header>
+        <main className="container mx-auto p-4">{children}</main>
+        <footer>{/* Optional: Simple footer */}</footer>
+      </body>
+    </html>
   );
 }

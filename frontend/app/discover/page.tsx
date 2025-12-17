@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../layout/sidebar";
-import MovieRow from "../movies/movierow";
-import MovieCard from "../movies/MovieCard";
-import { isAuthenticated, logout } from "@/lib/auth";
-import { Search, X, Play, Info, ArrowLeft, Loader2, Filter } from "lucide-react";
+import Sidebar from "../components/layout/sidebar";
+import MovieRow from "../components/movies/movierow";
+import MovieCard from "../components/movies/MovieCard";
+import { isAuthenticated, logout } from "@/app/lib/auth";
+import { Search, Play, ArrowLeft, Loader2, Filter } from "lucide-react";
 
 const API_KEY = "97ca10f5cde769f2a4954342ecad7b02";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -121,7 +121,7 @@ export default function DiscoverPage() {
             </div>
 
             <div className="flex items-center gap-5">
-              <div className="flex items-center bg-neutral-900 border border-white/5 px-3 py-2 rounded-md w-[350px] focus-within:border-red-600/50 transition-all">
+              <div className="flex items-center bg-neutral-900 border border-white/5 px-3 py-2 rounded-md w-87.5 focus-within:border-red-600/50 transition-all">
                 {isSearching ? <Loader2 size={16} className="text-red-600 animate-spin" /> : <Search size={16} className="text-neutral-500" />}
                 <input ref={searchInputRef} type="text" placeholder="Press '/' to search..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent outline-none ml-3 text-[13px] w-full" />
               </div>
@@ -165,9 +165,9 @@ export default function DiscoverPage() {
               {heroMovie && (
                 <div className="relative h-[65vh] w-full flex items-center px-12 overflow-hidden">
                   <div className="absolute inset-0">
-                    <img src={`https://image.tmdb.org/t/p/original${heroMovie.backdrop_path}`} className="w-full h-full object-cover" alt="" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#141414] via-transparent to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
+                    {/* <Image src={`https://image.tmdb.org/t/p/original${heroMovie.backdrop_path}`} className="w-full h-full object-cover" alt=""  width={40} height={40}/> */}
+                    <div className="absolute inset-0 bg-linear-to-r from-[#141414] via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[#141414] via-transparent to-transparent" />
                   </div>
                   <div className="relative z-10 max-w-xl space-y-4">
                     <h1 className="text-5xl font-black uppercase tracking-tighter leading-none drop-shadow-2xl">{heroMovie.title || heroMovie.name}</h1>

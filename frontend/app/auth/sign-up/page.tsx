@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { setAuthenticated } from "@/lib/auth";
+import { setAuthenticated } from "@/app/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -28,7 +28,7 @@ export default function SignUpPage() {
     console.log("User Data:", formData);
     
     setAuthenticated();
-    router.replace("/components/discover");
+    router.replace("/discover");
   };
 
   return (
@@ -40,7 +40,7 @@ export default function SignUpPage() {
             </h1>
           </Link>
     </header>
-      <div className="w-full max-w-[450px] bg-neutral-900/40 p-10 rounded-lg border border-neutral-800 shadow-2xl">
+      <div className="w-full max-w-112.5 bg-neutral-900/40 p-10 rounded-lg border border-neutral-800 shadow-2xl">
         
         <h1 className="text-3xl font-bold mb-8 text-center">Create Account</h1>
 
