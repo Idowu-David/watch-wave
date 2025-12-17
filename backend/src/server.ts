@@ -8,6 +8,7 @@ import sequelize from "./config/db";
 // IMPORTANT: model side-effect imports
 import "./models/user";
 import "./models/watchlist";
+import authRouter from "./routes/user.route"
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/auth", authRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("API is Live!!!");
