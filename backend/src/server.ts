@@ -22,9 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/tmdb', tmdbRoutes)
-// --- ROUTES WILL BE ADDED HERE ---
-// import authRoutes from './modules/auth/auth.routes';
-// app.use('/api/auth', authRoutes);
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send("API is Live!!!");

@@ -13,9 +13,17 @@ export const getTopRatedMovies = async (page: number = 1) => {
   return response.data;
 };
 
-export const getTrendingMovies = async (time: 'day' | 'week' = 'day') => {
-	
-}
+export const getTrendingMovies = async (time: "day" | "week" = "day") => {
+  const response = await axios.get(
+    `${process.env.TMDB_BASE_URL}/trending/movie/${time}`,
+    {
+      params: {
+        api_key: process.env.TMDB_API_KEY,
+      },
+    }
+  );
+  return response.data;
+};
 
 export const getDiscoverMovies = async (page: number = 1) => {
   const response = await axios.get(
@@ -23,7 +31,6 @@ export const getDiscoverMovies = async (page: number = 1) => {
     {
       params: {
         api_key: process.env.TMDB_API_KEY,
-        sort_by: "popularity.desc",
         page: page,
       },
     }
