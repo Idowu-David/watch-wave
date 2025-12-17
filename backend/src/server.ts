@@ -5,24 +5,23 @@ import express, { type Request, type Response, Application } from "express";
 import cors from "cors";
 import sequelize from "./config/db";
 
-// IMPORTANT: model side-effect imports
 import "./models/user";
 import "./models/watchlist";
-
-// importing of routes
+import tmdbRoutes from './routes/tmdb'
 import watchlistRoutes from "./routes/watchlist";
 import userRoutes from "./routes/user";
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("API is Live!!!");
 });
+
+app.use('/api/tmdb', tmdbRoutes)
 // --- ROUTES WILL BE ADDED HERE ---
 // import authRoutes from './modules/auth/auth.routes';
 // app.use('/api/auth', authRoutes);
