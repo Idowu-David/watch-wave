@@ -1,20 +1,29 @@
 import express from "express";
 import { Request, Response } from "express";
 import Watchlist from "../models/watchlist";
+import { authenticate } from "../middlewares/auth";
 
 const router = express.Router();
 
 // post a new watchlist item
-router.post("/watchlist", async (req: Request, res: Response) => {
+router.post("/watchlist", authenticate, async (req: Request, res: Response) => {
   try {
-    console.log("REQ BODY:", req.body);
+        console.log("REQ BODY:", req.body);
 
-    const { userId, tmdbId, title, status, posterUrl, rating, personalNotes } = req.body;
+        const { tmdbId, title, status, posterUrl, rating, personalNotes } = req.body;
 
-        if (!userId || !tmdbId || !title || !status || !posterUrl) {
-        return res.status(400).json({
-            message: "Missing required fields: userId, tmdbId, title, status, posterUrl"
-        });
+        const userId = req.user?.id;
+
+        if ( !tmdbId || !title || !status || !posterUrl) {
+            return res.status(400).json({
+                message: "Missing required fields: userId, tmdbId, title, status, posterUrl"
+            });
+        }
+
+        if(!userId) {
+            return res.status(401).json({
+                message: "Unauthorized: User ID not found"
+            });
         }
 
         const watchlistItem = await Watchlist.create({
@@ -28,8 +37,8 @@ router.post("/watchlist", async (req: Request, res: Response) => {
         });
 
         return res.status(201).json({
-        message: "Watchlist item created",
-        data: watchlistItem,
+            message: "Watchlist item created",
+            data: watchlistItem,
         });
     } catch (error) {
         console.error("CREATE WATCHLIST ERROR:", error);
@@ -42,9 +51,16 @@ router.post("/watchlist", async (req: Request, res: Response) => {
 
 
 // get all watchlist items for a user
-router.get("/getWatchList/:userId", async (req: Request, res: Response) => {
+router.get("/getWatchList", authenticate, async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized: User ID not found",
+      });
+    }
+    
     const watchlistItems = await Watchlist.findAll({ where: { userId } });
     return res.status(200).json({
       message: "Watchlist items retrieved",
@@ -60,7 +76,7 @@ router.get("/getWatchList/:userId", async (req: Request, res: Response) => {
 });
 
 // to get either watched or want_to_watch items
-router.get("/getWatchListStatus/:userId/", async (req: Request, res: Response) => {
+router.get("/getWatchListStatus/:userId/", authenticate, async (req: Request, res: Response) => {
     try {
         const { userId } = req.params;
         const { status } = req.query;
