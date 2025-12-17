@@ -3,8 +3,8 @@ import sequelize from "../config/db";
 import User from "./user";
 
 class Watchlist extends Model {
-  id: string;
-  userId: string;
+  id: number;
+  userId: number;
   tmdbId: number;
   title: string;
   posterUrl: string;
