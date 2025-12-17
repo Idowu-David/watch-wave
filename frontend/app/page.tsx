@@ -1,65 +1,67 @@
-import Image from "next/image";
+import Link from 'next/link';
+import Header from './components/common/Header';
+import { PlayCircle, ListVideo, Gauge } from 'lucide-react';
 
-export default function Home() {
+
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="min-h-screen bg-neutral-950 text-white relative overflow-hidden">
+      {/* 1. Header (Navigation) */}
+      <Header />
+
+      {/* 2. Hero Section */}
+      <main className="relative z-0 pt-16 pb-24 md:pt-24 md:pb-36 flex items-center justify-center">
+        <div className="max-w-4xl text-center px-4">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+            Your Ultimate <span className="text-red-600">Watchlist</span> Manager
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-6 text-lg md:text-xl text-neutral-400 max-w-2xl mx-auto">
+            Stop losing track of great movies and TV shows. Search, plan, rate, and track your entertainment journey effortlessly.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          
+          {/* Main CTAs */}
+          <div className="mt-10 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <Link 
+              href="../components/auth/sign-up" 
+              className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-red-600 hover:bg-red-700 transition transform hover:scale-[1.02]"
+            >
+              Start Tracking Now
+            </Link>
+            <Link 
+              href="../components/discover" 
+              className="inline-flex items-center justify-center px-8 py-3 border border-neutral-700 text-base font-medium rounded-full text-neutral-300 hover:bg-neutral-800 hover:text-white transition"
+            >
+              Browse Movies
+            </Link>
+          </div>
+
+          {/* Feature Highlights */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-neutral-800">
+              <ListVideo className="w-8 h-8 text-red-500 mb-3" />
+              <h3 className="text-xl font-semibold mb-2">Organize Lists</h3>
+              <p className="text-neutral-400 text-sm">Separate what you've seen from what you want to watch next.</p>
+            </div>
+            <div className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-neutral-800">
+              <PlayCircle className="w-8 h-8 text-red-500 mb-3" />
+              <h3 className="text-xl font-semibold mb-2">Rate & Review</h3>
+              <p className="text-neutral-400 text-sm">Add personal ratings and private notes to every watched title.</p>
+            </div>
+            <div className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-neutral-800">
+              <Gauge className="w-8 h-8 text-red-500 mb-3" />
+              <h3 className="text-xl font-semibold mb-2">Track Stats</h3>
+              <p className="text-neutral-400 text-sm">Visualize your viewing habits with genre and rating breakdowns.</p>
+            </div>
+          </div>
         </div>
       </main>
+
+      {/* Optional: Add a subtle background gradient or texture here for a cinematic look */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
+        <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,var(--tw-color-neutral-800)_0%,transparent_70%)]"></div>
+      </div>
+
     </div>
   );
 }
+

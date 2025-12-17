@@ -1,4 +1,4 @@
-import Sidebar from "../components/common/sidebar";
+import Sidebar from "./common/sidebar";
 
 export default function DiscoverPage() {
   return (
