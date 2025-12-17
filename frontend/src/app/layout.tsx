@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
-import '../styles/globals.css'
+import "../app/global.css";
+import Navbar from "../app/components/common/Navbar";
 
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-950 text-white">
-        {children}   {/* Pages render here */}
+      <body className="bg-black text-white">
+        <Navbar />
+        <div className="pt-16">{children}</div>
       </body>
     </html>
   );
