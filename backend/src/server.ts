@@ -4,6 +4,7 @@ dotenv.config();
 import express, { type Request, type Response, Application } from "express";
 import cors from "cors";
 import sequelize from "./config/db";
+import statsRoutes from "./modules/stats/stats.routes";
 
 // IMPORTANT: model side-effect imports
 import "./models/user";
@@ -15,6 +16,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/stats", statsRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("API is Live!!!");
