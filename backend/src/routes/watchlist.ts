@@ -5,7 +5,7 @@ import Watchlist from "../models/watchlist";
 const router = express.Router();
 
 // post a new watchlist item
-router.post("/create", async (req: Request, res: Response) => {
+router.post("/watchlist", async (req: Request, res: Response) => {
   try {
     console.log("REQ BODY:", req.body);
 
@@ -40,4 +40,49 @@ router.post("/create", async (req: Request, res: Response) => {
   }
 });
 
+
+// get all watchlist items for a user
+router.get("/getWatchList/:userId", async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const watchlistItems = await Watchlist.findAll({ where: { userId } });
+    return res.status(200).json({
+      message: "Watchlist items retrieved",
+      data: watchlistItems,
+    });
+  } catch (error) {
+    console.error("GET WATCHLIST ERROR:", error);
+    return res.status(500).json({   
+        message: "Server error",
+        error,
+    });
+  }
+});
+
+// to get either watched or want_to_watch items
+router.get("/getWatchListStatus/:userId/", async (req: Request, res: Response) => {
+    try {
+        const { userId } = req.params;
+        const { status } = req.query;
+
+        if (status !== "watched" && status !== "want_to_watch") {
+            return res.status(400).json({
+                message: "Invalid status. Must be 'watched' or 'want_to_watch'."
+            });
+            
+        }
+
+        const watchlistItems = await Watchlist.findAll({ where: { userId, status } });
+
+        return res.status(200).json({
+            message: "Watchlist items retrieved",
+            data: watchlistItems,
+        })
+    } catch (error) {
+        return res.status(500).json({   
+            message: "Server error",
+            error,
+        });
+    }
+})
 export default router;
