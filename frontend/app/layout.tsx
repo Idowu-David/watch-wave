@@ -1,13 +1,13 @@
-import "./global.css";
-import Navbar from "./components/common/Navbar";
+import Sidebar from "./common/sidebar";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function DiscoverPage() {
   return (
-    <html lang="en">
-      <body className="bg-black text-white">
-        <Navbar />
-        <div className="pt-16">{children}</div>
-      </body>
-    </html>
+    <div className="flex">
+      <Sidebar />
+      <main className="ml-64 p-6 w-full">
+        <h1 className="text-2xl font-bold mb-6">Discover</h1>
+        {/* movie rows go here */}
+      </main>
+    </div>
   );
 }

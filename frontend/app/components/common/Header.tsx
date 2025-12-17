@@ -7,7 +7,6 @@ const Header = () => {
         WatchWave
       </Link>
       <nav className="space-x-4">
-        {/* These links will later become conditional based on login status */}
         <Link 
           href="../components/auth/login" 
           className="px-4 py-2 text-sm font-medium rounded-full text-neutral-300 hover:text-white transition"

@@ -1,110 +1,85 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useStore } from '@/store/useWatchlistStore'; 
-import { Input } from '../../ui/input'; 
-import { Button } from '../../ui/button'; 
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '../../ui/card'; 
-import { LogIn } from 'lucide-react';
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { setAuthenticated } from "@/lib/auth";
+import { useState } from "react";
 
 export default function LoginPage() {
-    const router = useRouter();
-    const login = useStore(state => state.login);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-        setLoading(true);
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate successful login
+    setAuthenticated();
+    router.replace("/components/discover");
+  };
 
-        // --- FAKE LOGIN LOGIC ---
-        // In a real app, this would be an API call to your backend.
-        // For this project, we just check if the fields are non-empty.
-        if (email.trim() === '' || password.trim() === '') {
-            setError('Please enter both email and password.');
-            setLoading(false);
-            return;
-        }
+  return (    
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-black">
+      <header className="absolute top-0 left-0 p-8 z-20">
+         <Link href="/">
+            <h1 className="text-red-600 text-4xl font-black tracking-tighter uppercase cursor-pointer hover:scale-105 transition">
+              Watch-Wave
+            </h1>
+          </Link>
+    </header>
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center hidden md:block opacity-50" 
+        style={{ backgroundImage: "url('https://assets.nflxext.com/ffe/siteui/vlv3/f841d4c7-10e1-40af-9a10-07d3f044733e/web/US-en-20220502-popsignuptwoweeks-perspective_alpha_website_medium.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
+
+      {/* Login Card */}
+      <div className="relative z-10 w-full max-w-[450px] bg-black/75 p-16 rounded-md text-white">
+        <h1 className="text-3xl font-bold mb-8">Sign In</h1>
         
-        // Simulate a successful login after a short delay
-        setTimeout(() => {
-            // Call the Zustand store action to set the user
-            login({ email: email });
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email or phone number"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-4 bg-neutral-800 rounded focus:outline-none focus:ring-2 focus:ring-red-600 transition text-sm"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-4 bg-neutral-800 rounded focus:outline-none focus:ring-2 focus:ring-red-600 transition text-sm"
+            required
+          />
+          
+          <button
+            type="submit"
+            className="w-full bg-red-600 hover:bg-red-700 transition py-3 rounded font-bold mt-4"
+          >
+            Log In
+          </button>
+        </form>
 
-            // Redirect the user to the dashboard
-            router.push('../dashboard');
-            
-            setLoading(false);
-        }, 800);
-    };
-
-    return (
-        <div className="flex items-center justify-center min-h-screen bg-neutral-950">
-            <Card className="w-87.5 bg-neutral-900 border-neutral-800 text-white">
-                <CardHeader>
-                    <CardTitle className="text-3xl font-bold text-red-600">
-                        Log In
-                    </CardTitle>
-                    <p className="text-sm text-neutral-400">
-                        Welcome back! Enter your credentials below.
-                    </p>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Email</label>
-                            <Input
-                                type="email"
-                                placeholder="user@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="bg-neutral-800 border-neutral-700"
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium">Password</label>
-                            <Input
-                                type="password"
-                                placeholder="••••••••"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="bg-neutral-800 border-neutral-700"
-                                required
-                            />
-                        </div>
-                        
-                        {error && (
-                            <p className="text-sm text-center text-red-500">{error}</p>
-                        )}
-
-                        <Button 
-                            type="submit" 
-                            className="w-full bg-red-600 hover:bg-red-700"
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                'Logging in...'
-                            ) : (
-                                <><LogIn className="w-4 h-4 mr-2" /> Log In</>
-                            )}
-                        </Button>
-                    </form>
-                </CardContent>
-                <CardFooter className="text-center justify-center pt-0">
-                    <p className="text-sm text-neutral-400">
-                        Don't have an account?{' '}
-                        <Link href="/signup" className="text-red-500 hover:text-red-400 font-medium">
-                            Sign Up
-                        </Link>
-                    </p>
-                </CardFooter>
-            </Card>
+        <div className="flex justify-between items-center text-xs text-neutral-400 mt-4">
+          <div className="flex items-center gap-1">
+            <input type="checkbox" className="accent-neutral-500" id="remember" />
+            <label htmlFor="remember">Remember me</label>
+          </div>
+          <a href="#" className="hover:underline">Need help?</a>
         </div>
-    );
+
+        <div className="mt-16 text-neutral-500">
+          <p className="text-sm">
+            New to the app? <Link href="/components/auth/sign-up" className="text-white hover:underline cursor-pointer">Sign up now.</Link>       
+         </p>
+          <p className="text-xs mt-4">
+            This page is protected by Google reCAPTCHA to ensure you're not a bot.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }

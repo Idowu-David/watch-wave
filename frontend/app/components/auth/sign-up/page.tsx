@@ -1,121 +1,127 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter } from "next/navigation";
+import { setAuthenticated } from "@/lib/auth";
+import Link from "next/link";
+import { useState } from "react";
 
-export default function SignUp() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+export default function SignUpPage() {
   const router = useRouter();
+  
+  // State for all fields
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    age: "",
+    email: "",
+    password: ""
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-
-    // Basic validation
-    if (!email || !password || !confirmPassword) {
-      setError('All fields are required');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
-    setLoading(true);
-
-    // Fake signup success
-    setTimeout(() => {
-      // Save fake user to localStorage
-      localStorage.setItem('user', JSON.stringify({ email }));
-      localStorage.setItem('isLoggedIn', 'true');
-
-      // Redirect to home or dashboard
-      router.push('/components/dashboard');
-    }, 800);
+    
+    // Logic to save the user data would go here
+    console.log("User Data:", formData);
+    
+    setAuthenticated();
+    router.replace("/components/discover");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-950 text-white px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-red-600">WatchWave</h1>
-          <p className="mt-2 text-neutral-400">Create your account</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4 py-10">
+      <header className="absolute top-0 left-0 p-8 z-20">
+         <Link href="/">
+            <h1 className="text-red-600 text-4xl font-black tracking-tighter uppercase cursor-pointer hover:scale-105 transition">
+              Watch-Wave
+            </h1>
+          </Link>
+    </header>
+      <div className="w-full max-w-[450px] bg-neutral-900/40 p-10 rounded-lg border border-neutral-800 shadow-2xl">
+        
+        <h1 className="text-3xl font-bold mb-8 text-center">Create Account</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-neutral-300">
-              Email
-            </label>
+        <form onSubmit={handleSignup} className="space-y-4">
+          {/* Name Row */}
+          <div className="flex gap-4">
             <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full px-4 py-3 rounded-lg bg-neutral-900 border border-neutral-800 focus:border-red-600 focus:outline-none transition"
-              placeholder="you@example.com"
+              type="text"
+              name="firstName"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              className="w-1/2 p-4 rounded bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+              required
+            />
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              className="w-1/2 p-4 rounded bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
               required
             />
           </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-neutral-300">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-3 rounded-lg bg-neutral-900 border border-neutral-800 focus:border-red-600 focus:outline-none transition"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          {/* Age Field */}
+          <input
+            type="number"
+            name="age"
+            placeholder="Age"
+            min="1"
+            max="120"
+            value={formData.age}
+            onChange={handleChange}
+            className="w-full p-4 rounded bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+            required
+          />
 
-          <div>
-            <label htmlFor="confirm" className="block text-sm font-medium text-neutral-300">
-              Confirm Password
-            </label>
-            <input
-              id="confirm"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-3 rounded-lg bg-neutral-900 border border-neutral-800 focus:border-red-600 focus:outline-none transition"
-              placeholder="••••••••"
-              required
-            />
-          </div>
+          {/* Email Field */}
+          <input
+            type="email"
+            name="email"
+            placeholder="Email address"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full p-4 rounded bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+            required
+          />
 
-          {error && (
-            <p className="text-sm text-red-500 text-center">{error}</p>
-          )}
+          {/* Password Field */}
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full p-4 rounded bg-neutral-800 border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-red-600 transition"
+            required
+          />
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-medium transition disabled:opacity-70"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded mt-4 transition duration-200"
           >
-            {loading ? 'Creating account...' : 'Sign Up'}
+            Sign Up
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-neutral-400">
-          Already have an account?{' '}
-          <Link href="./login" className="text-red-500 hover:text-red-400 font-medium">
-            Log in
-          </Link>
-        </p>
+        <div className="mt-6 text-center">
+          <p className="text-neutral-500 text-sm">
+            Already a member?{" "}
+            <button 
+              onClick={() => router.push("../auth/login")} 
+              className="text-white hover:underline font-medium"
+            >
+              Log In
+            </button>
+          </p>
+        </div>
+
       </div>
     </div>
   );
