@@ -61,7 +61,6 @@ Watchlist.init(
   }
 );
 
-// Define the Association
 User.hasMany(Watchlist, {
   foreignKey: "userId",
   as: "watchlistItems",
