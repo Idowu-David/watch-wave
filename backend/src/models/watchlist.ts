@@ -11,6 +11,8 @@ class Watchlist extends Model {
   status: "watched" | "want_to_watch";
   rating: number | null;
   personalNotes: string | null;
+  genre: string[];
+  runtimeMinutes: number | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
@@ -27,6 +29,17 @@ Watchlist.init(
     tmdbId: { type: DataTypes.INTEGER, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
     posterUrl: { type: DataTypes.STRING, allowNull: true },
+
+    genre: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+    },
+
+    runtimeMinutes: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+
     status: {
       type: DataTypes.ENUM("watched", "want_to_watch"),
       allowNull: false,

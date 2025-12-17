@@ -1,5 +1,5 @@
-import User from "./modules/auth/user.model";
-import Watchlist from "./modules/watchlist/watchlist.model";
+import User from "./models/user";
+import Watchlist from "./models/watchlist";
 import sequelize from "./config/db";
 
 const models = {
