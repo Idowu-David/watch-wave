@@ -89,6 +89,24 @@ router.get("/getWatchListStatus/:userId/", async (req: Request, res: Response) =
 router.put("/updateWatchlist/:id", async (req: Request, res: Response) => {
     try {
         const { id } = req.params; 
+
+        const { status, rating, personalNotes } = req.body;
+
+        const watchlistItem = await Watchlist.findByPk(id);
+        if (!watchlistItem) {
+            return res.status(404).json({
+                message: "Watchlist item not found"
+            });
+        }
+        watchlistItem.status = status || watchlistItem.status;
+        watchlistItem.rating = rating !== undefined ? rating : watchlistItem.rating;
+        watchlistItem.personalNotes = personalNotes || watchlistItem.personalNotes; 
+        await watchlistItem.save();
+
+        return res.status(200).json({
+            message: "Watchlist item updated",
+            data: watchlistItem,
+        });
     } catch (error) {
         return res.status(500).json({   
             message: "Server error",
@@ -96,4 +114,6 @@ router.put("/updateWatchlist/:id", async (req: Request, res: Response) => {
         }); 
     }
 });
+
+
 export default router;
