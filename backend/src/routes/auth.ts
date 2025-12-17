@@ -8,85 +8,88 @@ dotenv.config();
 
 const router = express.Router();
 
+// Helper to keep token generation consistent
+const generateToken = (id: string) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET as string, {
+    expiresIn: "1d",
+  });
+};
+
 router.post("/signup", async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password } = req.body;
+  try {
+    const { firstName, lastName, email, password } = req.body;
 
-  if (!firstName || !lastName || !email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ message: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    //Generate token here for Automatic Login
+    const token = generateToken(newUser.id.toString());
+
+    return res.status(201).json({
+      message: "User registered successfully",
+      token, // Frontend to handle this
+      user: {
+        id: newUser.id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
   }
-  // 2. Check if user already exists
-  const existingUser = await User.findOne({ where: { email } });
-
-  if (existingUser) {
-    return res
-      .status(409)
-      .json({ message: "User with this email already exists" });
-  }
-
-  // 3. Hash the password
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-  // 4. Create the new user
-  const newUser = await User.create({
-    firstName: firstName,
-    lastName: lastName,
-    email: email,
-    password: hashedPassword,
-  });
-
-  // 5. Generate JWT Token
-  const token = jwt.sign(
-    { id: newUser.id, email: newUser.email },
-    process.env.JWT_SECRET || "default_secret",
-    { expiresIn: "1d" }
-  );
-
-  // 6. Send Response
-  return res.status(201).json({
-    message: "User registered successfully",
-    token,
-    user: {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-    },
-  });
 });
 
 router.post("/login", async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
+    if (!email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
-  const foundUser = await User.findOne({ where: { email } });
-  if (!foundUser) {
-    return res.status(400).json({ message: "User does not exist" });
-  }
-  const isPassword = await bcrypt.compare(password, foundUser.password);
-  if (!isPassword) {
-    return res.status(400).json({ message: "Invalid Password" });
-  }
+    const foundUser = await User.findOne({ where: { email } });
+    if (!foundUser) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-  const token = jwt.sign(
-    { id: foundUser.id },
-    process.env.JWT_SECRET || "default_secret",
-    { expiresIn: "1d" }
-  );
+    const isPasswordValid = await bcrypt.compare(password, foundUser.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-  return res.status(201).json({
-    user: {
-      id: foundUser.id,
+    // Generate token here for returning users
+
+    const token = generateToken(foundUser.id.toString());
+
+    return res.status(200).json({
       message: "User logged in successfully",
-      firstName: foundUser.firstName,
-      lastName: foundUser.lastName,
-      email: foundUser.email,
-    },
-    token,
-  });
+      token,
+      user: {
+        id: foundUser.id,
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        email: foundUser.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 });
 
 export default router;
