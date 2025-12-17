@@ -1,5 +1,3 @@
-console.log("🔥 User model file loaded");
-
 import { DataTypes, Model, Sequelize } from "sequelize";
 import sequelize from "../config/db"
 
