@@ -19,20 +19,25 @@ app.use(express.json());
 // import authRoutes from './modules/auth/auth.routes';
 // app.use('/api/auth', authRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-	res.send('API is Live!!!')
-})
+app.get("/", (req: Request, res: Response) => {
+  res.send("API is Live!!!");
+});
 
 async function startServer() {
-  await connectDB();
+  try {
+    await connectDB();
+    console.log("✅ Database connected");
 
-  // Create tables based on the models. Use { alter: true } to update schema non-destructively
-  await sequelize.sync({ alter: true });
-  console.log("✅ Database models synchronized with PostgreSQL (Sequelize).");
+    await sequelize.sync({ alter: true });
+    console.log("✅ Database models synchronized");
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
 }
 
 startServer();
