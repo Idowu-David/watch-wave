@@ -1,44 +1,28 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../../config/db";
-import User from "../auth/user.model";
+import sequelize from "../config/db";
+import User from "./user";
 
-export interface IWatchlist {
-  id: string;
-  userId: string;
+class Watchlist extends Model {
+  id: number;
+  userId: number;
   tmdbId: number;
   title: string;
   posterUrl: string;
   status: "watched" | "want_to_watch";
   rating: number | null;
   personalNotes: string | null;
-}
-interface WatchlistCreationAttributes
-  extends Optional<IWatchlist, "id" | "rating" | "personalNotes"> {}
-
-class Watchlist
-  extends Model<IWatchlist, WatchlistCreationAttributes>
-  implements IWatchlist
-{
-  public id!: string;
-  public userId!: string;
-  public tmdbId!: number;
-  public title!: string;
-  public posterUrl!: string;
-  public status!: "watched" | "want_to_watch";
-  public rating!: number | null;
-  public personalNotes!: string | null;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 Watchlist.init(
   {
     id: {
-					type: DataTypes.INTEGER,
-					primaryKey: true,
-					autoIncrement: true,
-					allowNull: false,
-				},
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     userId: { type: DataTypes.INTEGER, allowNull: false },
     tmdbId: { type: DataTypes.INTEGER, allowNull: false },
     title: { type: DataTypes.STRING, allowNull: false },
@@ -61,6 +45,7 @@ Watchlist.init(
   }
 );
 
+// Define the Association
 User.hasMany(Watchlist, {
   foreignKey: "userId",
   as: "watchlistItems",

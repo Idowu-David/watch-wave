@@ -6,8 +6,8 @@ import cors from "cors";
 import sequelize from "./config/db";
 
 // IMPORTANT: model side-effect imports
-import "./modules/auth/user.model";
-import "./modules/watchlist/watchlist.model";
+import "./models/user";
+import "./models/watchlist";
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
