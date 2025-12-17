@@ -2,12 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "../layout/sidebar";
-import MovieRow from "../movies/movierow";
-import MovieCard from "../movies/MovieCard";
+import Sidebar from "../components/layout/sidebar";
+import MovieRow from "../components/movies/movierow";
+import MovieCard from "../components/movies/MovieCard";
 import { isAuthenticated, logout } from "@/app/lib/auth";
 import { Search, Play, ArrowLeft, Loader2, Filter } from "lucide-react";
-import Image from "next/image";
 
 const API_KEY = "97ca10f5cde769f2a4954342ecad7b02";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -166,7 +165,7 @@ export default function DiscoverPage() {
               {heroMovie && (
                 <div className="relative h-[65vh] w-full flex items-center px-12 overflow-hidden">
                   <div className="absolute inset-0">
-                    <Image src={`https://image.tmdb.org/t/p/original${heroMovie.backdrop_path}`} className="w-full h-full object-cover" alt="" />
+                    {/* <Image src={`https://image.tmdb.org/t/p/original${heroMovie.backdrop_path}`} className="w-full h-full object-cover" alt=""  width={40} height={40}/> */}
                     <div className="absolute inset-0 bg-linear-to-r from-[#141414] via-transparent to-transparent" />
                     <div className="absolute inset-0 bg-linear-to-t from-[#141414] via-transparent to-transparent" />
                   </div>

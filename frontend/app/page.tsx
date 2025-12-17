@@ -28,7 +28,7 @@ export default function LandingPage() {
               Start Tracking Now
             </Link>
             <Link 
-              href="../components/discover" 
+              href="/discover" 
               className="inline-flex items-center justify-center px-8 py-3 border border-neutral-700 text-base font-medium rounded-full text-neutral-300 hover:bg-neutral-800 hover:text-white transition"
             >
               Browse Movies

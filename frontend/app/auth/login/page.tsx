@@ -14,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault();
     // Simulate successful login
     setAuthenticated();
-    router.replace("/components/discover");
+    router.replace("/discover");
   };
 
   return (    
