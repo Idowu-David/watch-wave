@@ -7,9 +7,9 @@ import sequelize from "./config/db";
 
 import "./models/user";
 import "./models/watchlist";
+import authRoutes from "./routes/auth";
 import tmdbRoutes from './routes/tmdb'
 import watchlistRoutes from "./routes/watchlist";
-import userRoutes from "./routes/user";
 
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
@@ -33,11 +33,11 @@ async function startServer() {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");
 
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     console.log("✅ Models synced:", Object.keys(sequelize.models));
 
+    app.use("/auth", authRoutes);
     app.use("/watchlist", watchlistRoutes);
-    app.use("/user", userRoutes);
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
