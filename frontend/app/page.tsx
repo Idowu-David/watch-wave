@@ -40,7 +40,7 @@ export default function LandingPage() {
             <div className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-neutral-800">
               <ListVideo className="w-8 h-8 text-red-500 mb-3" />
               <h3 className="text-xl font-semibold mb-2">Organize Lists</h3>
-              <p className="text-neutral-400 text-sm">Separate what you've seen from what you want to watch next.</p>
+              <p className="text-neutral-400 text-sm">Separate what you&apos;ve seen from what you want to watch next.</p>
             </div>
             <div className="p-6 bg-neutral-900 rounded-xl shadow-xl border border-neutral-800">
               <PlayCircle className="w-8 h-8 text-red-500 mb-3" />

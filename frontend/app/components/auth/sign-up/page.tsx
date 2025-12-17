@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { setAuthenticated } from "@/lib/auth";
+import { setAuthenticated } from "@/app/lib/auth";
 import Link from "next/link";
 import { useState } from "react";
 
