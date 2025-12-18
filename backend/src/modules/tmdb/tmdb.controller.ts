@@ -32,9 +32,9 @@ export async function getDiscoverController(req: Request, res: Response) {
 
     res.json({
       success: true,
-      page: data.page,
-      total_pages: data.total_pages,
-      results: data.results,
+      // page: data.page,
+      // total_pages: data.total_pages,
+      // results: data.results,
     });
   } catch (error) {
     console.log("TMDB Discover Error: ", error);
