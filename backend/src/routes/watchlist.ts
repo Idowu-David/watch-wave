@@ -6,99 +6,109 @@ import { authenticate } from "../middlewares/auth";
 const router = express.Router();
 
 // post a new watchlist item
-router.post("/watchlist", authenticate, async (req: Request, res: Response) => {
+router.post("/create", authenticate, async (req: Request, res: Response) => {
   try {
-        console.log("REQ BODY:", req.body);
+    console.log("REQ BODY:", req.body);
 
-        const { tmdbId, title, status, posterUrl, rating, personalNotes } = req.body;
+    const { tmdbId, title, status, posterUrl, rating, personalNotes } =
+      req.body;
 
-        const userId = req.user?.id;
-
-        if ( !tmdbId || !title || !status || !posterUrl) {
-            return res.status(400).json({
-                message: "Missing required fields: userId, tmdbId, title, status, posterUrl"
-            });
-        }
-
-        if(!userId) {
-            return res.status(401).json({
-                message: "Unauthorized: User ID not found"
-            });
-        }
-
-        const watchlistItem = await Watchlist.create({
-            userId,
-            tmdbId,
-            title,
-            status,
-            posterUrl,
-            rating,
-            personalNotes
-        });
-
-        return res.status(201).json({
-            message: "Watchlist item created",
-            data: watchlistItem,
-        });
-    } catch (error) {
-        console.error("CREATE WATCHLIST ERROR:", error);
-        return res.status(500).json({
-        message: "Server error",
-        error,
-    });
-  }
-});
-
-
-// get all watchlist items for a user
-router.get("/getWatchList", authenticate, async (req: Request, res: Response) => {
-  try {
     const userId = req.user?.id;
+
+    if (!tmdbId || !title || !status || !posterUrl) {
+      return res.status(400).json({
+        message:
+          "Missing required fields: userId, tmdbId, title, status, posterUrl",
+      });
+    }
 
     if (!userId) {
       return res.status(401).json({
         message: "Unauthorized: User ID not found",
       });
     }
-    
-    const watchlistItems = await Watchlist.findAll({ where: { userId } });
-    return res.status(200).json({
-      message: "Watchlist items retrieved",
-      data: watchlistItems,
+
+    const watchlistItem = await Watchlist.create({
+      userId,
+      tmdbId,
+      title,
+      status,
+      posterUrl,
+      rating,
+      personalNotes,
+    });
+
+    return res.status(201).json({
+      message: "Watchlist item created",
+      data: watchlistItem,
     });
   } catch (error) {
-    console.error("GET WATCHLIST ERROR:", error);
-    return res.status(500).json({   
-        message: "Server error",
-        error,
+    console.error("CREATE WATCHLIST ERROR:", error);
+    return res.status(500).json({
+      message: "Server error",
+      error,
     });
   }
 });
 
-// to get either watched or want_to_watch items
-router.get("/getWatchListStatus/:userId/", authenticate, async (req: Request, res: Response) => {
+// get all watchlist items for a user
+router.get(
+  "/getWatchList",
+  authenticate,
+  async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;
-        const { status } = req.query;
+      const userId = req.user?.id;
 
-        if (status !== "watched" && status !== "want_to_watch") {
-            return res.status(400).json({
-                message: "Invalid status. Must be 'watched' or 'want_to_watch'."
-            });
-            
-        }
-
-        const watchlistItems = await Watchlist.findAll({ where: { userId, status } });
-
-        return res.status(200).json({
-            message: "Watchlist items retrieved",
-            data: watchlistItems,
-        })
-    } catch (error) {
-        return res.status(500).json({   
-            message: "Server error",
-            error,
+      if (!userId) {
+        return res.status(401).json({
+          message: "Unauthorized: User ID not found",
         });
+      }
+
+      const watchlistItems = await Watchlist.findAll({ where: { userId } });
+      return res.status(200).json({
+        message: "Watchlist items retrieved",
+        data: watchlistItems,
+      });
+    } catch (error) {
+      console.error("GET WATCHLIST ERROR:", error);
+      return res.status(500).json({
+        message: "Server error",
+        error,
+      });
     }
-})
+  }
+);
+
+// to get either watched or want_to_watch items
+router.get(
+  "/getWatchListStatus/:userId/",
+  authenticate,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const { status } = req.query;
+
+      if (status !== "watched" && status !== "want_to_watch") {
+        return res.status(400).json({
+          message: "Invalid status. Must be 'watched' or 'want_to_watch'.",
+        });
+      }
+
+      const watchlistItems = await Watchlist.findAll({
+        where: { userId, status },
+      });
+
+      return res.status(200).json({
+        message: "Watchlist items retrieved",
+        data: watchlistItems,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Server error",
+        error,
+      });
+    }
+  }
+);
 export default router;
