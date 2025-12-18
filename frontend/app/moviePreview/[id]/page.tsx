@@ -1,3 +1,4 @@
+
 "use client";
 import { useWatchlist } from "@/context/WatchlistContext";
 import { useParams } from "next/navigation";
