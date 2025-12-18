@@ -15,7 +15,6 @@ import watchlistRoutes from "./routes/watchlist";
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 
-// ADD THIS CORS CONFIG
 app.use(cors({
   origin: "*", // Allows all origins — change to your frontend URL in production
   credentials: true,
