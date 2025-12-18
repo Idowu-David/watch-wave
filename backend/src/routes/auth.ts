@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/user";
+import { authMiddleware, AuthRequest } from "../middlewares/authMiddleware";
+
 
 dotenv.config();
 
@@ -56,7 +58,6 @@ router.post("/signup", async (req: Request, res: Response) => {
       .json({ message: (error as Error).message || "Something went wrong" });
   }
 });
-
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -92,6 +93,22 @@ router.post("/login", async (req: Request, res: Response) => {
     return res
       .status(500)
       .json({ message: (error as Error).message || "Something went wrong" });
+  }
+});
+
+router.get("/me", authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = await User.findByPk(req.user!.id, {
+      attributes: ["id", "firstName", "lastName", "email"],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch {
+    res.status(500).json({ message: "Server error" });
   }
 });
 
