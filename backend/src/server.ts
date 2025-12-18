@@ -26,27 +26,27 @@ app.use(cors({
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("API is Live!!! 🚀");
+  res.send("API is Live!!!");
 });
 
 app.use("/api/tmdb", tmdbRoutes);
 app.use("/api/watchlist", watchlistRoutes);
 app.use("/auth", authRoutes);
-app.use("/watchlist", watchlistRoutes); // if needed
+app.use("/watchlist", watchlistRoutes);
 
 async function startServer() {
   try {
     await sequelize.authenticate();
-    console.log("✅ Database connected successfully.");
+    console.log("Database connected successfully.");
 
     await sequelize.sync({ alter: true });
-    console.log("✅ Models synced");
+    console.log("Models synced");
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Server failed to start:", err);
+    console.error("Server failed to start:", err);
     process.exit(1);
   }
 }
