@@ -1,4 +1,4 @@
-// app/dashboard/page.tsx - FULL FINAL CODE
+// app/dashboard/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -7,14 +7,12 @@ import MovieCard from "@/components/ui/MovieCard";
 import StatsDashboard from "@/components/ui/StatsDashboard";
 import Sidebar from "@/components/ui/Sidebar";
 import { useWatchlist } from "@/context/WatchlistContext";
-import { useAuth } from "@/context/AuthContext";
 import { Search, Loader2, X, Star } from "lucide-react";
 
 const BACKEND_URL = "https://watch-wave-5es6.onrender.com";
 
 export default function DashboardPage() {
   const { toggleWatchlist, toast, setToast } = useWatchlist();
-  const { user } = useAuth();
 
   const [currentView, setCurrentView] = useState<"home" | "watchlist" | "library">("home");
 
@@ -42,8 +40,10 @@ export default function DashboardPage() {
     upcoming: "/api/tmdb/upcoming",
   };
 
-  // Basic genres fallback
+  // Fetch genres (fallback if backend doesn't have /genres)
   useEffect(() => {
+    // You can add a backend endpoint for genres if needed
+    // For now, use a basic list
     setGenres([
       { id: 0, name: "All" },
       { id: 28, name: "Action" },
@@ -62,6 +62,7 @@ export default function DashboardPage() {
     setIsLoading(true);
     let url = `${BACKEND_URL}${endpoints[currentTab]}?page=${reset ? 1 : page}`;
 
+    // Apply filters
     if (selectedGenre !== "All") {
       const genreId = genres.find(g => g.name === selectedGenre)?.id;
       if (genreId && genreId !== 0) url += `&with_genres=${genreId}`;
@@ -72,7 +73,7 @@ export default function DashboardPage() {
 
     try {
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch");
+      if (!res.ok) throw new Error("Failed");
       const data = await res.json();
       const newMovies = data.results || [];
 
@@ -104,6 +105,7 @@ export default function DashboardPage() {
     const timer = setTimeout(async () => {
       setIsSearching(true);
       try {
+        // Replace with your backend search endpoint when ready
         const res = await fetch(`${BACKEND_URL}/api/tmdb/search?query=${encodeURIComponent(searchQuery)}`);
         if (res.ok) {
           const data = await res.json();
@@ -121,13 +123,9 @@ export default function DashboardPage() {
   // Add to watchlist
   const handleAddToWatchlist = async (movie: any) => {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch(`${BACKEND_URL}/watchlist/create`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           tmdb_id: movie.id,
           title: movie.title || movie.name,
@@ -194,16 +192,6 @@ export default function DashboardPage() {
         </header>
 
         <div className="p-12">
-          {/* Welcome Message */}
-          {user && (
-            <div className="mb-12">
-              <h1 className="text-5xl font-black uppercase tracking-wider text-red-600">
-                Welcome {user.firstName} {user.lastName}
-              </h1>
-              <p className="text-white/60 text-xl mt-4">Discover what's trending today</p>
-            </div>
-          )}
-
           {/* Filter Bar */}
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 mb-16 border border-white/10">
             <h3 className="text-2xl font-black uppercase tracking-widest text-red-600 mb-8">Quick Filter</h3>
@@ -315,7 +303,7 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      {/* Movie Details Modal */}
+      {/* Modal */}
       <AnimatePresence>
         {selectedMovie && (
           <motion.div
