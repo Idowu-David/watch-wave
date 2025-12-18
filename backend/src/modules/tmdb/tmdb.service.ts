@@ -1,68 +1,49 @@
 import axios from "axios";
 
-//get top rated movie
-export const getTopRatedMovies = async (page: number = 1) => {
-  const response = await axios.get(
-    `${process.env.TMDB_BASE_URL}/movie/top_rated`,
-    {
-      params: {
-        api_key: process.env.TMDB_API_KEY,
-        page,
-      },
-    }
-  );
-  return response.data;
-};
+const TMDB_BASE_URL = process.env.TMDB_BASE_URL;
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
-// get search movie
-export const getsearchMovies = async (page: 1) => {
-  const response = await axios.get(
-    `${process.env.TMDB_BASE_URL}/search/movie`, {
-      params: {
-        api_key: process.env.TMDB_API_KEY,
-        page: page
-      }
+// 1. Fixed: Search now accepts a QUERY string
+export const searchMovies = async (query: string, page: number = 1) => {
+  const response = await axios.get(`${TMDB_BASE_URL}/search/movie`, {
+    params: {
+      api_key: TMDB_API_KEY,
+      query: query, // Pass the search term to TMDB
+      page: page,
     },
-  );
-  return response.data;
-};
-// get trending movie
-export const getTrendingMovies = async (time: "day" | "week" = "day") => {
-  const response = await axios.get(
-    `${process.env.TMDB_BASE_URL}/trending/movie/${time}`,
-    {
-      params: {
-        api_key: process.env.TMDB_API_KEY,
-      },
-    }
-  );
+  });
   return response.data;
 };
 
-//watched movie
-// export const getWatchedMovies = async (page: number = 1) => {
-//   const response = await axios.get(
-//   `${process.env.TMDB_BASE_URL}/watched/movie`, {
-//     params: {
-//       api_key: process.env.TMDB_API_KEY,
-//       page: page
-//     }
-//   },
-// );
-// return response.data;
-// };
+// 2. Fixed: Trending now accepts a PAGE
+export const getTrendingMovies = async (page: number = 1) => {
+  const response = await axios.get(`${TMDB_BASE_URL}/trending/movie/week`, {
+    params: {
+      api_key: TMDB_API_KEY,
+      page: page,
+    },
+  });
+  return response.data;
+};
 
-// discover movie
+// 3. Generic Category Fetcher (for 'top_rated', 'upcoming', 'popular')
+export const getMoviesByCategory = async (
+  category: string,
+  page: number = 1
+) => {
+  const response = await axios.get(`${TMDB_BASE_URL}/movie/${category}`, {
+    params: {
+      api_key: TMDB_API_KEY,
+      page: page,
+    },
+  });
+  return response.data;
+};
+
+// 4. Discover
 export const getDiscoverMovies = async (page: number = 1) => {
-  const response = await axios.get(
-    `${process.env.TMDB_BASE_URL}/discover/movie`,
-    {
-      params: {
-        api_key: process.env.TMDB_API_KEY,
-        page: page,
-      },
-    }
-  );
-  console.log("TMDB RESPONSE: ", response);
+  const response = await axios.get(`${TMDB_BASE_URL}/discover/movie`, {
+    params: { api_key: TMDB_API_KEY, page: page },
+  });
   return response.data;
 };
