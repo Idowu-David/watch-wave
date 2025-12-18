@@ -1,4 +1,4 @@
-// app/dashboard/page.tsx
+// app/dashboard/page.tsx - FULL FINAL CODE
 "use client";
 
 import { useEffect, useState } from "react";
@@ -72,7 +72,7 @@ export default function DashboardPage() {
 
     try {
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       const newMovies = data.results || [];
 
