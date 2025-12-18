@@ -25,7 +25,7 @@ export default function MovieRow({ title, movies }: { title: string; movies: any
         <button onClick={() => scroll("left")} className={`absolute left-0 z-40 h-[80%] w-10 bg-black/70 hover:bg-red-600 transition-all duration-300 flex items-center justify-center rounded-r-md ${showButtons ? "opacity-100" : "opacity-0 invisible"}`}><ChevronLeft size={24} /></button>
         <div ref={scrollRef} className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-2 py-4">
           {movies.map((movie) => (
-            <div key={movie.id} className="min-w-[140px] md:min-w-[180px]">
+            <div key={movie.id} className="min-w-35 md:min-w-45">
               <MovieCard movie={movie} />
             </div>
           ))}

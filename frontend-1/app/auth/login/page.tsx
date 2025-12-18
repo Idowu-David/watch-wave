@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { setAuthenticated } from "@/lib/auth";
+import { setAuthenticated } from "../../lib/auth";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -14,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault();
     // Simulate successful login
     setAuthenticated();
-    router.replace("/components/discover");
+    router.replace("../discover");
   };
 
   return (    
@@ -34,7 +34,7 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Login Card */}
-      <div className="relative z-10 w-full max-w-[450px] bg-black/75 p-16 rounded-md text-white">
+      <div className="relative z-10 w-full max-w-112.5 bg-black/75 p-16 rounded-md text-white">
         <h1 className="text-3xl font-bold mb-8">Sign In</h1>
         
         <form onSubmit={handleLogin} className="space-y-4">
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
         <div className="mt-16 text-neutral-500">
           <p className="text-sm">
-            New to the app? <Link href="/components/auth/sign-up" className="text-white hover:underline cursor-pointer">Sign up now.</Link>       
+            New to the app? <Link href="../auth/sign-up" className="text-white hover:underline cursor-pointer">Sign up now.</Link>       
          </p>
           <p className="text-xs mt-4">
             This page is protected by Google reCAPTCHA to ensure you're not a bot.

@@ -8,7 +8,7 @@ dotenv.config();
 
 const router = express.Router();
 
-// Helper to keep token generation consistent
+// Helper
 const generateToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
     expiresIn: "1d",
@@ -37,12 +37,10 @@ router.post("/signup", async (req: Request, res: Response) => {
       password: hashedPassword,
     });
 
-    //Generate token here for Automatic Login
-    const token = generateToken(newUser.id.toString());
-
     return res.status(201).json({
       message: "User registered successfully",
-      token, // Frontend to handle this
+
+      // Frontend should read this success message and redirect to /login
       user: {
         id: newUser.id,
         firstName: newUser.firstName,
@@ -73,8 +71,7 @@ router.post("/login", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate token here for returning users
-
+    // TOKEN IS GENERATED HERE ONLY
     const token = generateToken(foundUser.id.toString());
 
     return res.status(200).json({
