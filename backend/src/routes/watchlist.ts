@@ -5,7 +5,7 @@ import Watchlist from "../models/watchlist";
 const router = express.Router();
 
 // post a new watchlist item
-router.post("/watchlist", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   try {
     console.log("REQ BODY:", req.body);
 

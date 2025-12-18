@@ -22,6 +22,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use('/api/tmdb', tmdbRoutes)
+app.use('/api/watchlist', watchlistRoutes)
 
 
 app.get("/", (req: Request, res: Response) => {
