@@ -2,6 +2,13 @@ import { type Request, type Response } from "express";
 import * as tmdbService from "./tmdb.service";
 import axios from "axios";
 
+interface TmdbResponse {
+  page: number;
+  results: any[];
+  total_pages: number;
+  total_results: number;
+}
+
 export async function getMoviesByCategory(req: Request, res: Response) {
   const { category } = req.params;
   const page = parseInt(req.query.page as string) || 1;
@@ -28,13 +35,13 @@ export async function getMoviesByCategory(req: Request, res: Response) {
 export async function getDiscoverController(req: Request, res: Response) {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const data = await tmdbService.getDiscoverMovies(page);
+    const data = await tmdbService.getDiscoverMovies(page) as TmdbResponse;
 
     res.json({
       success: true,
-      // page: data.page,
-      // total_pages: data.total_pages,
-      // results: data.results,
+      page: data.page,
+      total_pages: data.total_pages,
+      results: data.results,
     });
   } catch (error) {
     console.log("TMDB Discover Error: ", error);
@@ -47,7 +54,7 @@ export async function getDiscoverController(req: Request, res: Response) {
 export async function getsearchMovies(req: Request, res: Response) {
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const data = await tmdbService.getDiscoverMovies(page);
+    const data = await tmdbService.getDiscoverMovies(page) as TmdbResponse;
 
     res.json({
       success: true,

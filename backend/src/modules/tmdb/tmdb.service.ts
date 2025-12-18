@@ -40,17 +40,17 @@ export const getTrendingMovies = async (time: "day" | "week" = "day") => {
 };
 
 //watched movie
-export const getWatchedMovies = async (page: number = 1) => {
-  const response = await axios.get(
-  `${process.env.TMDB_BASE_URL}/watched/movie`, {
-    params: {
-      api_key: process.env.TMDB_API_KEY,
-      page: page
-    }
-  },
-);
-return response.data;
-};
+// export const getWatchedMovies = async (page: number = 1) => {
+//   const response = await axios.get(
+//   `${process.env.TMDB_BASE_URL}/watched/movie`, {
+//     params: {
+//       api_key: process.env.TMDB_API_KEY,
+//       page: page
+//     }
+//   },
+// );
+// return response.data;
+// };
 
 // discover movie
 export const getDiscoverMovies = async (page: number = 1) => {
