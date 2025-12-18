@@ -38,16 +38,16 @@ export function WatchlistProvider({ children }: { children: ReactNode }) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    const savedWatchlist = localStorage.getItem("tamo-watchlist");
-    const savedWatched = localStorage.getItem("tamo-watched");
+    const savedWatchlist = localStorage.getItem("Watch-Wave-watchlist");
+    const savedWatched = localStorage.getItem("Watch-Wave-watched");
     if (savedWatchlist) setWatchlist(JSON.parse(savedWatchlist));
     if (savedWatched) setWatched(JSON.parse(savedWatched));
   }, []);
 
   // Save to localStorage on change
   useEffect(() => {
-    localStorage.setItem("tamo-watchlist", JSON.stringify(watchlist));
-    localStorage.setItem("tamo-watched", JSON.stringify(watched));
+    localStorage.setItem("Watch-Wave-watchlist", JSON.stringify(watchlist));
+    localStorage.setItem("Watch-Wave-watched", JSON.stringify(watched));
   }, [watchlist, watched]);
 
   const showToast = (msg: string, type: "success" | "info" = "success") => {
