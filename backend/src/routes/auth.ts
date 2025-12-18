@@ -10,7 +10,9 @@ const router = express.Router();
 
 // Helper
 const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new Error("Server configuration error: JWT_SECRET not set");
+  return jwt.sign({ id }, secret, {
     expiresIn: "1d",
   });
 };
@@ -49,7 +51,9 @@ router.post("/signup", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ message: (error as Error).message || "Something went wrong" });
   }
 });
 
@@ -85,7 +89,9 @@ router.post("/login", async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ message: (error as Error).message || "Something went wrong" });
   }
 });
 

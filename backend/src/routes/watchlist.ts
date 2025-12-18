@@ -8,7 +8,7 @@ const router = express.Router();
 // post a new watchlist item
 router.post("/create", authenticate, async (req: Request, res: Response) => {
   try {
-    console.log("REQ BODY:", req.body);
+    // console.log("REQ BODY:", req.body);
 
     const { tmdbId, title, status, posterUrl, rating, personalNotes } =
       req.body;
@@ -18,7 +18,7 @@ router.post("/create", authenticate, async (req: Request, res: Response) => {
     if (!tmdbId || !title || !status || !posterUrl) {
       return res.status(400).json({
         message:
-          "Missing required fields: userId, tmdbId, title, status, posterUrl",
+          "Missing required fields: tmdbId, title, status, posterUrl",
       });
     }
 
@@ -82,27 +82,33 @@ router.get(
 
 // to get either watched or want_to_watch items
 router.get(
-  "/getWatchListStatus/:userId/",
+  "/getWatchListStatus",
   authenticate,
   async (req: Request, res: Response) => {
     try {
-      const { userId } = req.params;
-      const { status } = req.query;
+        const userId = req.user?.id;
 
-      if (status !== "watched" && status !== "want_to_watch") {
-        return res.status(400).json({
-          message: "Invalid status. Must be 'watched' or 'want_to_watch'.",
+        if (!userId) {
+            return res.status(401).json({
+            message: "Unauthorized: User ID not found",
+            });
+        }
+        const { status } = req.query;
+
+        if (status !== "watched" && status !== "want_to_watch") {
+            return res.status(400).json({
+            message: "Invalid status. Must be 'watched' or 'want_to_watch'.",
+            });
+        }
+
+        const watchlistItems = await Watchlist.findAll({
+            where: { userId, status },
         });
-      }
 
-      const watchlistItems = await Watchlist.findAll({
-        where: { userId, status },
-      });
-
-      return res.status(200).json({
-        message: "Watchlist items retrieved",
-        data: watchlistItems,
-      });
+        return res.status(200).json({
+            message: "Watchlist items retrieved",
+            data: watchlistItems,
+        });
     } catch (error) {
       return res.status(500).json({
         message: "Server error",
@@ -111,4 +117,98 @@ router.get(
     }
   }
 );
+
+// to put update on watchlist item
+router.put("/update/:id", authenticate, async (req: Request, res: Response) => {
+  try {
+        const userId = req.user?.id;
+        const watchlistItemId = req.params.id; 
+        const { status, rating, personalNotes } = req.body;
+
+        if(!userId) {
+            return res.status(401).json({
+            message: "Unauthorized: User ID not found",
+            })
+        }
+
+        const watchlistItem = await Watchlist.findByPk(watchlistItemId);
+
+        if (!watchlistItem) {
+            return res.status(404).json({
+            message: "Watchlist item not found",
+            });
+        }
+
+        // Ensure the authenticated user owns this item
+        // if (watchlistItem.userId !== userId) {
+        //     return res.status(403).json({ message: "Forbidden: you do not own this watchlist item" });
+        // }
+
+        // Validate inputs
+        if (status !== undefined && status !== "watched" && status !== "want_to_watch") {
+            return res.status(400).json({ message: "Invalid status. Must be 'watched' or 'want_to_watch'." });
+        }
+
+        const num = Number(rating);
+        if (Number.isNaN(num) || num < 0 || num > 10) {
+            return res.status(400).json({ message: "Invalid rating. Must be a number between 0 and 10." });
+        }
+
+        // Preserve valid falsy values using nullish coalescing
+        watchlistItem.status = status ?? watchlistItem.status;
+        watchlistItem.rating = rating ?? watchlistItem.rating;
+        watchlistItem.personalNotes = personalNotes ?? watchlistItem.personalNotes;
+        await watchlistItem.save();
+
+        return res.status(200).json({
+            message: "Watchlist item updated",
+            data: watchlistItem,
+        });
+    } catch (error) {
+        console.error("UPDATE WATCHLIST ERROR:", error);
+        return res.status(500).json({
+            message: "Server error",
+            error,
+        });
+    }
+});
+
+// to delete a watchlist item
+router.delete("/delete/:id", authenticate, async (req: Request, res: Response) => {
+  try {
+        const userId = req.user?.id;
+        const watchlistItemId = req.params.id;
+        if(!userId) {
+            return res.status(401).json({
+            message: "Unauthorized: User ID not found",
+            })
+        }
+
+        const watchlistItem = await Watchlist.findByPk(watchlistItemId);
+
+        if (!watchlistItem) {
+            return res.status(404).json({
+            message: "Watchlist item not found",
+            });
+        }
+
+        // Ensure the authenticated user owns this item
+        // if(watchlistItem.userId !== userId){
+        //     return res.status(403).json({ message: "Forbidden: you do not own this watchlist item" });
+        // }
+
+        await watchlistItem.destroy();
+
+        return res.status(200).json({
+            message: "Watchlist item deleted",
+        });
+    } catch (error) {
+        console.error("DELETE WATCHLIST ERROR:", error);
+        return res.status(500).json({   
+            message: "Server error",
+            error,
+        });
+    }   
+});           
+
 export default router;
