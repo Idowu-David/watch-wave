@@ -14,7 +14,7 @@ export const isAuthenticated = () => {
 
 export const logout = () => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem("isLoggedIn");
-    window.location.href = "/login"; // Redirect to login on logout
+    localStorage.clear();
+    window.location.href = "/auth/login"; // Redirect to login on logout
   }
 };

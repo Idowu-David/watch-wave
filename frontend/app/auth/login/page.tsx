@@ -2,20 +2,43 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { setAuthenticated } from "@/app/lib/auth";
+import { setAuthenticated, isAuthenticated } from "@/app/lib/auth";
 import { useState } from "react";
+import { useStore } from "@/app/store/useWatchlistStore";
+import { useEffect } from "react";
+
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // const handleLogin = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // Simulate successful login
+  //   setAuthenticated();
+  //   router.replace("/discover");
+  // };
+
+  
+
+  // Redirect if already authenticated
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      router.replace("/discover");
+    }
+  }, [router]);
+
+
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulate successful login
-    setAuthenticated();
-    router.replace("/discover");
-  };
+  e.preventDefault();
+  const user = { email, password };
+  console.log(user)
+  useStore.getState().login(user);
+  setAuthenticated();
+  router.replace("/discover");
+};
 
   return (    
     <div className="relative min-h-screen w-full flex items-center justify-center bg-black">
