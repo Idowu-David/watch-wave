@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import User from "../models/user";
-import { authMiddleware, AuthRequest } from "../middlewares/authMiddleware";
 
 
 dotenv.config();
@@ -96,20 +95,35 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/me", authMiddleware, async (req: AuthRequest, res: Response) => {
+// routes/auth.ts — add this route
+router.get("/me", async (req: Request, res: Response) => {
   try {
-    const user = await User.findByPk(req.user!.id, {
-      attributes: ["id", "firstName", "lastName", "email"],
-    });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET not set");
+
+    const decoded = jwt.verify(token, secret) as { id: string };
+    const user = await User.findOne({ where: { id: decoded.id } });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ user });
-  } catch {
-    res.status(500).json({ message: "Server error" });
+    return res.status(200).json({
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+    });
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 });
-
 export default router;
