@@ -17,30 +17,42 @@ export default function SearchPage() {
   const [selectedMovie, setSelectedMovie] = useState<any>(null);
 
   // Search with debounce
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    const timer = setTimeout(async () => {
-      setIsSearching(true);
-      try {
-        const res = await fetch(
-          `${BACKEND_URL}/api/tmdb/search?query=${encodeURIComponent(searchQuery)}`
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setSearchResults(data.results || []);
+ useEffect(() => {
+  if (!searchQuery.trim()) {
+    setSearchResults([]);
+    return;
+  }
+
+  const timer = setTimeout(async () => {
+    setIsSearching(true);
+    try {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+          searchQuery
+        )}&include_adult=false&language=en-US&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN || "97ca10f5cde769f2a4954342ecad7b02"}`,
+            "Content-Type": "application/json",
+          },
         }
-      } catch (err) {
-        console.error(err);
-        setToast({ msg: "Search failed", type: "info" });
-      } finally {
-        setIsSearching(false);
-      }
-    }, 600);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+      );
+
+      if (!res.ok) throw new Error("TMDB search failed");
+
+      const data = await res.json();
+      setSearchResults(data.results || []);
+    } catch (err) {
+      console.error(err);
+      setToast({ msg: "Search failed", type: "info" });
+    } finally {
+      setIsSearching(false);
+    }
+  }, 600);
+
+  return () => clearTimeout(timer);
+}, [searchQuery]);
+
 
   // Add to watchlist
   const handleAddToWatchlist = async (movie: any) => {

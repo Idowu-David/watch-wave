@@ -256,7 +256,7 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Next Page */}
+          {/* Load More */}
           {hasMore && (
             <div className="flex justify-end mb-12">
               <button
@@ -264,7 +264,7 @@ export default function DashboardPage() {
                 disabled={isLoading}
                 className="bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white px-12 py-5 rounded-full font-black uppercase tracking-widest text-lg shadow-2xl transition"
               >
-                {isLoading ? "Loading..." : "Next Page"}
+                {isLoading ? "Loading..." : "More"}
               </button>
             </div>
           )}
