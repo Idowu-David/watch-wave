@@ -10,7 +10,7 @@ import { Search as SearchIcon, Loader2, X, Star } from "lucide-react";
 const BACKEND_URL = "https://watch-wave-5es6.onrender.com";
 
 export default function SearchPage() {
-  const { toggleWatchlist, toast, setToast } = useWatchlist();
+  const { toast, setToast } = useWatchlist();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -266,4 +266,8 @@ useEffect(() => {
       </AnimatePresence>
     </div>
   );
+}
+
+function toggleWatchlist(movie: any) {
+  throw new Error("Function not implemented.");
 }
