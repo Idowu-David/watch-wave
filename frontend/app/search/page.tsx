@@ -17,7 +17,7 @@ export default function SearchPage() {
   const [selectedMovie, setSelectedMovie] = useState<any>(null);
 
   // Search with debounce
- useEffect(() => {
+useEffect(() => {
   if (!searchQuery.trim()) {
     setSearchResults([]);
     return;
@@ -27,15 +27,9 @@ export default function SearchPage() {
     setIsSearching(true);
     try {
       const res = await fetch(
-        `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(
+        `https://api.themoviedb.org/3/search/multi?api_key=97ca10f5cde769f2a4954342ecad7b02&query=${encodeURIComponent(
           searchQuery
-        )}&include_adult=false&language=en-US&page=1`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_TOKEN || "97ca10f5cde769f2a4954342ecad7b02"}`,
-            "Content-Type": "application/json",
-          },
-        }
+        )}&include_adult=false&language=en-US&page=1`
       );
 
       if (!res.ok) throw new Error("TMDB search failed");
