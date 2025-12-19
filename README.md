@@ -1,5 +1,7 @@
 # Watch‑Wave
 
+🔗 Live Demo: https://watch-wave-theta.vercel.app/
+
 Watch‑Wave is a full‑stack entertainment tracker that allows users to organize, track, and manage their personal movie and TV show watchlists in one place.
 
 Built using: Built with HTML, CSS, JavaScript, TypeScript, Next.js, Node.js, Express.js, and SQL.
